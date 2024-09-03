@@ -83,4 +83,6 @@
 
 .homepage-section-height {
   min-height: calc(100vh - 50px);
+  max-height: calc(100vh - 50px);
+  /* height: calc(100vh - 50px); */
 }

@@ -2,7 +2,7 @@ import React from "react";
 import WordPullUp from "@/components/magicui/word-pull-up";
 import BlurFade from "@/components/magicui/blur-fade";
 const PageInfo = () => {
-  const images = Array.from({ length: 9 }, (_, i) => {
+  const images = Array.from({ length: 12 }, (_, i) => {
     const isLandscape = i % 2 === 0;
     const width = isLandscape ? 800 : 600;
     const height = isLandscape ? 600 : 800;
@@ -19,9 +19,9 @@ const PageInfo = () => {
           Search by image to find similar images based on deep learning
         </p>
       </div>
-      <div className="flex-grow p-4 w-full h-1/2 overflow-y-scroll">
-        <section id="photos">
-          <div className="columns-2 gap-4 sm:columns-3 h-full overflow-y-auto">
+      <div className="flex-grow p-4 w-full h-[150px] mt-3 overflow-y-scroll">
+       
+          <div className="columns-2 gap-4 sm:columns-3  overflow-y-scroll">
             {images.map((imageUrl, idx) => (
               <BlurFade key={imageUrl} delay={0.25 + idx * 0.05} inView>
                 <img
@@ -32,7 +32,7 @@ const PageInfo = () => {
               </BlurFade>
             ))}
           </div>
-        </section>
+        
       </div>
     </section>
   );
