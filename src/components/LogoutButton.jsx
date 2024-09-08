@@ -1,27 +1,30 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import ShimmerButton from "@/components/magicui/shimmer-button";
-import { Context } from "@/context/Context";
+import { signOut } from "next-auth/react";
 
-const LoginButton = () => {
-  const { handleLoginClick, handleHasLoggedIn } = useContext(Context);
+const LogoutButton = () => {
   useEffect(() => {});
+  const handleLogout = async () => {
+    await signOut({
+      callbackUrl: "/",
+    });
+  };
 
   return (
     <div
       className=""
       onClick={() => {
-        handleLoginClick();
-        console.log("Login button clicked");
+        handleLogout();
       }}
     >
       <ShimmerButton className="shadow-2xl">
         <span className="whitespace-pre-wrap text-center  leading-none tracking-tight text-white dark:from-white dark:to-slate-900/10 ">
-          Log In
+          Log Out
         </span>
       </ShimmerButton>
     </div>
   );
 };
 
-export default LoginButton;
+export default LogoutButton;

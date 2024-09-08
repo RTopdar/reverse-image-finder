@@ -1,14 +1,11 @@
-
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ui/ThemeToggle/ThemeToggle";
-
-
 import LoginButton from "@/components/LoginButton";
-import SignUpButton from "@/components/SignUpButton";
+import LogoutButton from "@/components/LogoutButton";
 
-const Navbar = () => {
-  
+const Navbar = ({ session }) => {
+  console.log("session in navbar", session);
 
   return (
     <main className="w-full h-full flex justify-between">
@@ -17,10 +14,7 @@ const Navbar = () => {
         <span className=" font-sans font-bold">Reverse Image Search</span>
       </div>
       <div className="w-1/3 items-center flex justify-end gap-x-2">
-        <div className="">
-         <LoginButton />
-        </div>
-        {/* <SignUpButton /> */}
+        <div className="">{session ? <LogoutButton /> : <LoginButton />}</div>
         <ThemeToggle />
       </div>
     </main>

@@ -5,13 +5,15 @@ import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
 const ThemeToggle = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useTheme("dark");
+
   useEffect(() => {
     console.log(theme);
   }, [theme]);
   useEffect(() => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
+
     } else {
       document.documentElement.classList.remove("dark");
     }
