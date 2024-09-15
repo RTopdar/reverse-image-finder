@@ -1,9 +1,8 @@
 import Login from "@/components/ui/Login/Login";
 import MoreInfo from "@/components/ui/MoreInfo/MoreInfo";
-import Navbar from "@/components/ui/Navbar/Navbar";
 import PageInfo from "@/components/ui/PageInfo/PageInfo";
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex homepage-section-height min-w-screen max-w-screen flex-col gap-x-2 scrollable-element bg-white dark:bg-black text-black dark:text-white">
       <main className="flex gap-x-2 ">

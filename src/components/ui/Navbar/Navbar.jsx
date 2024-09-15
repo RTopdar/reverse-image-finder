@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ui/ThemeToggle/ThemeToggle";
 import LoginButton from "@/components/LoginButton";
 import LogoutButton from "@/components/LogoutButton";
+import NavBarButton from "./NavBarButton";
 
 const Navbar = ({ session }) => {
   console.log("session in navbar", session);
@@ -14,7 +15,7 @@ const Navbar = ({ session }) => {
         <span className=" font-sans font-bold">Reverse Image Search</span>
       </div>
       <div className="w-1/3 items-center flex justify-end gap-x-2">
-        <div className="">{session ? <LogoutButton /> : <LoginButton />}</div>
+        <div className="">{<NavBarButton />}</div>
         <ThemeToggle />
       </div>
     </main>
