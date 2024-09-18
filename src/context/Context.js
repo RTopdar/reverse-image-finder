@@ -12,10 +12,16 @@ export const Provider = ({ children }) => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [hasLoggedIn, sethasLoggedIn] = useState(false);
+  const [searchText, setsearchText] = useState("");
+  const [openUpload, setopenUpload] = useState(false);
   const router = useRouter();
 
   const handleHasLoggedIn = (value) => {
     sethasLoggedIn(value);
+  };
+
+  const handleSearchText = (value) => {
+    setsearchText(value);
   };
 
   const handleNameChange = (e) => {
@@ -63,6 +69,9 @@ export const Provider = ({ children }) => {
         handleNameChange,
         handleEmailChange,
         handlePasswordChange,
+        searchText,
+        handleSearchText,
+     
       }}
     >
       {children}

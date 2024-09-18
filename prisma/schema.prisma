@@ -83,4 +83,5 @@ model Picture {
   uploaderId String   // Foreign key reference to User
   uploadedAt DateTime @default(now()) // Automatic timestamp for when the image was uploaded
   uploader   User     @relation(fields: [uploaderId], references: [id]) // Relating back to the User model
+  board      String?  // Board name for categorizing images
 }

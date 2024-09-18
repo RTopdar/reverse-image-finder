@@ -11,6 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ token, session }) {
       console.log("SESSION TOKEN", { token });
       session = token;
+      session.lastLoginTime = new Date();
       console.log("SESSION", { session });
       return token;
     },

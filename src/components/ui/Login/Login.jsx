@@ -100,7 +100,7 @@ const Login = () => {
     if (loginStatus.success) {
       toast.success(loginStatus.message);
       // Manually handle redirection
-      router.push("/about");
+      router.push("/home");
     } else {
       toast.error("Invalid credentials");
     }
@@ -131,10 +131,11 @@ const Login = () => {
   };
 
   const oauthSignIn = async (provider) => {
-    const signInStatus = await signIn(provider, { callbackUrl: "/about" });
+    const signInStatus = await signIn(provider, { callbackUrl: "/home" });
     if (signInStatus.success) {
       toast.success(signInStatus.message);
-      router.push("/about");
+      toast.success("Redirecting to home page");
+      router.push("/home");
     } else {
       toast.error(signInStatus.message);
     }
