@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Reverse Image Finder
 
-First, run the development server:
+This project aims to recreate the core functionalities and user interface of Pinterest, offering a visually appealing and user-friendly platform for discovering and sharing inspiring content. By combining cutting-edge technologies like Next.js, GCP, and transformers, we've developed a tool that empowers users to find and curate images that resonate with their interests.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Our goal is to showcase our abilities and build a user-facing web application using a seamless blend of different technologies.  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Features
+**Core Functionality**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+* **Image Search:** Users can easily find and view images based on their search queries.
+* **Image Upload:** Users can upload single or multiple photos and add descriptive tags for better organization and discovery.
+* **Social Interaction:** Users can engage with the community by commenting and replying to other users' photos.
 
-## Learn More
+**User Experience**
 
-To learn more about Next.js, take a look at the following resources:
+* **Seamless Authentication:** Users can sign in using their preferred credentials, including Google and GitHub accounts, for a convenient and secure experience.
+* **Performance Optimization:** Built with Next.js, the application leverages server-side rendering to deliver faster load times and enhance user satisfaction.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Technical Architecture**
+* **Authentication:** Secured and isolated authentication using Next.js session management and Auth.js.
+* **Data Management** Prisma schema provides a structured and efficient way to manage data.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Techonologies Used
 
-## Deploy on Vercel
+### Storage and Deployment
+* Google Cloud Platform
+    * **Cloud Run**: Hosting the Next.js web application
+    * **Cloud Storage**: Storing images 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### User Interface 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* Frameworks
+    * Next.js
+* Design Libraries
+    * shadcn/ui
+    * Magic UI
+
+### Image Search Algorithm
+
+
+## Authors
+
+- [@RTopdar](https://www.github.com/Rtopdar)
+- [@Shamindra](https://www.github.com/octokatherine)
+
