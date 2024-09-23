@@ -1,8 +1,10 @@
 import Login from "@/components/ui/Login/Login";
 import MoreInfo from "@/components/ui/MoreInfo/MoreInfo";
 import PageInfo from "@/components/ui/PageInfo/PageInfo";
+import { auth } from "@/auth";
 
 export default async function Home() {
+  const session = await auth();
   return (
     <main className="flex homepage-section-height min-w-screen max-w-screen flex-col gap-x-2 scrollable-element bg-white dark:bg-black text-black dark:text-white">
       <main className="flex gap-x-2 ">
@@ -13,9 +15,11 @@ export default async function Home() {
           <div className="snap-start">
             <MoreInfo />
           </div>
-          <div className="snap-start h-full">
-            <Login />
-          </div>
+          {session === null && (
+            <div className="snap-start">
+              <Login />
+            </div>
+          )}
         </div>
       </main>
     </main>

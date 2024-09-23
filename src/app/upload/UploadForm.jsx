@@ -12,133 +12,147 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea"; // Assuming you have a Textarea component
+import { Textarea } from "@/components/ui/textarea";
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { toast } from "react-toastify";
+import { useTheme } from "next-themes";
 
-const schema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().optional(),
-  link: z.string().url("Invalid URL").optional(),
-  taggedTopics: z.array(z.string()).optional(),
-  board: z.string().optional(),
-});
+import { MdDelete } from "react-icons/md";
+import SingleImageUpload from "./SingleImageUpload";
 
 const UploadForm = () => {
   const [isMultiple, setisMultiple] = useState(false);
+  const [uploadedImages, setuploadedImages] = useState([]);
+  const [activeIndex, setactiveIndex] = useState(-1);
+  const theme = useTheme();
 
-  const form = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      title: "",
-      description: "",
-      link: "",
-      taggedTopics: [],
-      board: "",
-    },
-  });
+  useEffect(() => {
+    if (uploadedImages.length === 0) {
+      setactiveIndex(-1);
+    }
+  }, [uploadedImages]);
 
-  const onSubmit = (data) => console.log(data);
+  useEffect(() => {
+    console.log(activeIndex);
+  }, [activeIndex]);
+
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 5) {
+      toast.error("You can only upload a maximum of 5 images at a time.", {
+        theme: theme === "dark" ? "dark" : "light",
+      });
+      return;
+    }
+    console.log(acceptedFiles);
+    setuploadedImages(acceptedFiles);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <section className="w-full h-full flex gap-x-2">
-      <div className="w-1/2 p-2">
-        <div className="w-full h-full border border-dashed border-black dark:border-white rounded-lg flex flex-col">
-          <div className="mt-auto">
-            <p className="leading-7 [&:not(:first-child)]:mt-6 flex justify-center h-[100px] container mx-auto">
-              Provide high quality images less than 20MB. The supported formats
-              are .jpg, .jpeg, .png, .gif, .webp.
-            </p>
-          </div>
+    <div
+      className="w-full flex gap-x-2 overflow-auto"
+      style={{
+        maxHeight: "70vh", // Dynamic max-height based on viewport
+        minHeight: "400px", // Ensures a minimum height for smaller screens
+      }}
+    >
+      {uploadedImages.length > 0 && (
+        <div className="w-1/3 border border-dotted rounded-lg border-black dark:border-white overflow-y-auto max-h-full flex flex-col gap-y-3">
+          {uploadedImages.map((file, index) => {
+            const url = URL.createObjectURL(file);
+            return (
+              <div
+                key={index}
+                className="relative h-[200px] mt-2 mb-5 flex flex-col hover:border-gray-200 cursor-pointer border border-white m-2"
+              >
+                <div className="w-full flex justify-end ">
+                  <div
+                    className="hover:bg-gray-200 p-1 rounded-full cursor-pointer"
+                    onClick={() => {
+                      setuploadedImages(
+                        uploadedImages.filter((_, i) => i !== index)
+                      );
+                    }}
+                  >
+                    <MdDelete fill="red" size={20} />
+                  </div>
+                </div>
+                <div
+                  className=""
+                  onClick={() => {
+                    setactiveIndex(index);
+                  }}
+                >
+                  <AspectRatio ratio={16 / 9}>
+                    <Image
+                      src={url}
+                      width={220}
+                      height={200}
+                      alt="Uploaded image"
+                    />
+                  </AspectRatio>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="w-full p-2 flex max-h-full overflow-auto">
+        <div
+          className={`w-full h-full border border-dashed border-black dark:border-white rounded-lg flex flex-col overflow-auto`}
+        >
+          {activeIndex === -1 ? (
+            <div className="w-full h-full flex flex-col" id="no-image-uploaded">
+              <div className="w-full flex-grow" {...getRootProps()}>
+                <input {...getInputProps()} className="w-full h-full" />
+                {isDragActive ? (
+                  <p className="w-full h-full flex items-center justify-center">
+                    Drop the files here ...
+                  </p>
+                ) : (
+                  <p className="w-full h-full flex items-center justify-center">
+                    Drag 'n' drop some files here, or click to select files
+                  </p>
+                )}
+              </div>
+              <div className="mt-auto">
+                <p className="leading-7 [&:not(:first-child)]:mt-6 flex justify-center h-[100px] container mx-auto">
+                  Provide high quality images less than 20MB. The supported
+                  formats are .jpg, .jpeg, .png, .gif, .webp.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full h-full flex flex-col" id="image-uploaded">
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                <Image
+                  src={URL.createObjectURL(uploadedImages[activeIndex])}
+                  width={500}
+                  height={500}
+                  alt="Uploaded image"
+                />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <div className="w-1/2">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Enter description" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="link"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Link</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter URL" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="taggedTopics"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tagged Topics</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Enter topics separated by commas"
-                      {...field}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        const topicsArray = value
-                          .split(",")
-                          .map((topic) => topic.trim());
-                        field.onChange(topicsArray);
-                      }}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Enter topics separated by commas.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="board"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Board</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter board" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        </Form>
-      </div>
-    </section>
+      {(activeIndex !== -1 || uploadedImages.length > 0) && (
+        <div className="w-1/2">
+          <SingleImageUpload
+            image={uploadedImages[activeIndex]}
+            uploadedImages={uploadedImages}
+            activeImageIndex={activeIndex}
+            setuploadedImages={setuploadedImages}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

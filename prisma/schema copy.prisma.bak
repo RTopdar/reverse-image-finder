@@ -1,0 +1,87 @@
+// MongoDB Datasource Configuration
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGO_URI")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// User model for storing user information
+model User {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectID mapped to _id
+  name        String?
+  image       String?
+  email       String   @unique
+  provider    String?  // Provider for OAuth users
+  emailVerified DateTime? // Timestamp for when the email is verified
+  password    String?  // Password is optional for users with Google auth
+  fromGoogle  Boolean  @default(false) // Indicates if the user signed up using Google
+  createdAt   DateTime @default(now()) // Automatic timestamp for when the user is created
+  updatedAt   DateTime @updatedAt      // Automatically updates when the user is modified
+  activities    Activity[] // One-to-many relation with Activity
+  pictures    Picture[] // One-to-many relation with Picture
+  accounts      Account[] // One-to-many relation with Account
+  history     DateTime[] // Array to store the date and time of user logins
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+ 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+ 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ 
+  @@unique([provider, providerAccountId])
+}
+
+// Activity model for tracking user activity
+model Activity {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectID mapped to _id
+  userId     String     // Foreign key reference to User
+  images     String[]   // Array of image URLs uploaded by the user
+  comments   Comment[]  // Relation to Comment model for storing comments and replies
+  user       User       @relation(fields: [userId], references: [id]) // Relating back to the User model
+}
+
+// Comment model for storing comments on images
+model Comment {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectID mapped to _id
+  accountId String    // Foreign key reference to Activity
+  picId     String    // Picture ID related to the comment
+  text      String    // Actual comment content
+  replies   Reply[]   // Relation to Reply model for storing replies to this comment
+  account   Activity   @relation(fields: [accountId], references: [id]) // Relating back to the Activity model
+}
+
+// Reply model for handling replies to comments
+model Reply {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectID mapped to _id
+  commentId  String   // Foreign key reference to Comment
+  userId     String   // User ID of the person who replied
+  reply      String   // The reply content
+  comment    Comment  @relation(fields: [commentId], references: [id]) // Relating back to the Comment model
+}
+
+// Picture model for storing image metadata
+model Picture {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId // MongoDB ObjectID mapped to _id
+  url        String   // URL of the image
+  uploaderId String   // Foreign key reference to User
+  uploadedAt DateTime @default(now()) // Automatic timestamp for when the image was uploaded
+  uploader   User     @relation(fields: [uploaderId], references: [id]) // Relating back to the User model
+  board      String?  // Board name for categorizing images
+}

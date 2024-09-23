@@ -1,8 +1,10 @@
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma"; // Use the cached prisma client
 import authConfig from "./auth.config";
-const prisma = new PrismaClient();
+
+let cachedSession = null;
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
@@ -15,8 +17,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       console.log("SESSION", { session });
       return token;
     },
+
     async jwt({ token }) {
       console.log({ token });
+
+      if (cachedSession && cachedSession.userId === token.sub) {
+        return cachedSession;
+      }
+
       const userId = token.sub;
       if (userId) {
         const user = await prisma.user.findUnique({
@@ -35,16 +43,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (account.provider === "google") {
               user.fromGoogle = true;
             }
-
-            // user.emailVerified = true;
           }
         }
-        // token.user = user;
         token.provider = user.provider;
         token.emailVerified = user.emailVerified;
         token.fromGoogle = user.fromGoogle;
         token.createdAt = user.createdAt;
         token.updatedAt = user.updatedAt;
+
+        cachedSession = token; // Cache the session data
       }
 
       return token;

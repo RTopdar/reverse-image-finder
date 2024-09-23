@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import BoxReveal from "@/components/magicui/box-reveal";
 import { useTheme } from "next-themes";
-import ShimmerButton from "@/components/magicui/shimmer-button";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 import LoginButton from "@/components/LoginButton";
-import SignUpButton from "@/components/SignUpButton";
 
 const MoreInfo = () => {
   const { theme } = useTheme();
@@ -13,6 +14,13 @@ const MoreInfo = () => {
   useEffect(() => {
     console.log(theme);
   }, [theme]);
+
+  const session = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
 
   return (
     <div className="w-full homepage-section-height bg-white dark:bg-black flex flex-col items-center justify-center">
@@ -62,7 +70,17 @@ const MoreInfo = () => {
           duration={0.5}
         >
           <div className="flex gap-x-2 mt-2">
-            <LoginButton />
+            {session.data === null ? (
+              <LoginButton />
+            ) : (
+              <Button
+                onClick={() => {
+                  router.push("/about");
+                }}
+              >
+                Get Started
+              </Button>
+            )}
             {/* <SignUpButton /> */}
           </div>
         </BoxReveal>
