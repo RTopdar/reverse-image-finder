@@ -45,4 +45,4 @@ Our goal is to showcase our abilities and build a user-facing web application us
 ## Authors
 
 - [@RTopdar](https://www.github.com/Rtopdar)
-- [@Shamindra](https://www.github.com/octokatherine)
+- [@shamindraparui](https://www.github.com/shamindraparui)
